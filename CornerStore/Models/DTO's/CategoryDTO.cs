@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CornerStore.Models;
+namespace CornerStore.Models.DTO;
 
-public class Category
+public class CategoryDTO
 {
     public int Id { get; set; }
     public string CategoryName { get; set; }
 
     // NAV PROPS
-    public List<Product> Products { get; set; } = new List<Product>();
+    public List<ProductDTO> Products { get; set; } = new List<ProductDTO>();
 }
