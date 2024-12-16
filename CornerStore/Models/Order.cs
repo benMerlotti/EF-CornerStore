@@ -15,5 +15,13 @@ public class Order
     // NAV PROPERTIES
     public Cashier Cashier { get; set; }
     public List<Product> Products { get; set; }
+    // CALCULATED
+    public decimal Total
+    {
+        get
+        {
+            return Products?.Sum(p => p.Price) ?? 0;
+        }
+    }
 
 }
