@@ -8,7 +8,6 @@ public class OrderDTO
 {
     public int Id { get; set; }
     public int CashierId { get; set; }
-    [NotMapped]
     public DateTime? PaidOnDate { get; set; }
     public decimal Total { get; set; }
 
@@ -28,6 +27,15 @@ public class OrderDetailsDTO
 
     // NAV PROPERTIES
     public Cashier Cashier { get; set; }
+    public List<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+
+}
+
+public class CreateOrderDTO
+{
+    public int Id { get; set; }
+    public int CashierId { get; set; }
+    public DateTime? PaidOnDate { get; set; }
     public List<ProductDTO> Products { get; set; } = new List<ProductDTO>();
 
 }

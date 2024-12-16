@@ -36,8 +36,8 @@ public class CornerStoreDbContext : DbContext
 
         // Seed Orders
         modelBuilder.Entity<Order>().HasData(
-            new Order { Id = 1, CashierId = 1, PaidOnDate = DateTime.Now },
-            new Order { Id = 2, CashierId = 2, PaidOnDate = DateTime.Now }
+            new Order { Id = 1, CashierId = 1, PaidOnDate = DateTime.Today },
+            new Order { Id = 2, CashierId = 2, PaidOnDate = DateTime.Today }
         );
 
         // Seed OrderProducts

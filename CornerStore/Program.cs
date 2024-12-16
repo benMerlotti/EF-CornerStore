@@ -140,6 +140,71 @@ app.MapGet("orders/{id}", (CornerStoreDbContext db, int id) =>
     }).FirstOrDefault();
 });
 
+app.MapGet("orders", (CornerStoreDbContext db, string? orderDate) =>
+{
+
+    var query = db.Orders
+    .Include(o => o.Cashier)
+    .Include(o => o.Products)
+    .ThenInclude(p => p.Category)
+    .AsQueryable();
+
+    if (!string.IsNullOrEmpty(orderDate))
+    {
+        query = query.Where(q => q.PaidOnDate.ToString() == orderDate);
+    }
+
+    var orders = query
+    .Select(o => new OrderDTO
+    {
+        Id = o.Id,
+        CashierId = o.CashierId,
+        PaidOnDate = o.PaidOnDate,
+        Products = o.Products.Select(p => new ProductDTO
+        {
+            Id = p.Id,
+            ProductName = p.ProductName,
+            Price = p.Price,
+            Brand = p.Brand,
+            CategoryId = p.CategoryId,
+            CategoryName = p.Category.CategoryName
+        }).ToList()
+    }).ToList();
+
+    return orders;
+});
+
+app.MapDelete("order/delete/{id}", (CornerStoreDbContext db, int id) =>
+{
+    Order chosenOrder = db.Orders.FirstOrDefault(o => o.Id == id);
+
+    db.Orders.Remove(chosenOrder);
+    db.SaveChanges();
+
+    return Results.Ok();
+});
+
+app.MapPost("order/create", async (CornerStoreDbContext db, CreateOrderDTO newOrder) =>
+{
+    var productIds = newOrder.Products
+    .Select(p => p.Id)
+    .ToList();
+
+    List<Product> products = await db.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+
+    Order newerOrder = new Order
+    {
+        CashierId = newOrder.CashierId,
+        PaidOnDate = newOrder.PaidOnDate,
+        Products = products,
+    };
+
+    await db.Orders.AddAsync(newerOrder);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"orders/{newerOrder.Id}", newerOrder);
+});
+
 app.Run();
 
 //don't move or change this!

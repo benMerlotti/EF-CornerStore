@@ -9,7 +9,6 @@ public class Order
     public int Id { get; set; }
     [Required]
     public int CashierId { get; set; }
-    [NotMapped]
     public DateTime? PaidOnDate { get; set; }
 
     // NAV PROPERTIES
